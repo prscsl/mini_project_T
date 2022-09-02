@@ -1,0 +1,38 @@
+<<<<<<< HEAD
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/app/
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+hooks:
+  ApplicationStart:
+    - location: deploy.sh
+      timeout: 60
+=======
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/app/
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+hooks:
+  ApplicationStart:
+    - location: deploy.sh
+      timeout: 60
+>>>>>>> 93c37ba731d28f4c1bcde0e4a6f30b0f1fec55de
+      runas: ubuntu
