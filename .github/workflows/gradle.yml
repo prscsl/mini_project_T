@@ -29,6 +29,17 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         
+    - name: make application.properties
+      if: contains(github.ref, 'master')
+      run: |
+        cd ./src/main/resources
+        
+        touch ./application-dev.properties 
+        
+        echo "${{ secrets.PROPERTIES }}" > ./application.properties 
+        
+      shell: bash
+        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     
