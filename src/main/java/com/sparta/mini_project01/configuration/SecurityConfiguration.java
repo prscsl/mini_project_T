@@ -45,25 +45,25 @@ public class SecurityConfiguration {
 
     http.csrf().disable()
 
-        .exceptionHandling()
-        .authenticationEntryPoint(authenticationEntryPointException)
-        .accessDeniedHandler(accessDeniedHandlerException)
+            .exceptionHandling()
+            .authenticationEntryPoint(authenticationEntryPointException)
+            .accessDeniedHandler(accessDeniedHandlerException)
 
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-        .and()
-        .authorizeRequests()
-        .antMatchers("/api/member/**").permitAll()
-        .antMatchers("/api/post/**").permitAll()
-        .antMatchers("/api/comment/**").permitAll()
-            .antMatchers("/api/subComment/**").permitAll()
+            .and()
+            .authorizeRequests()
+            .antMatchers("/api/signup").permitAll()
+            .antMatchers("/api/login").permitAll()
+            .antMatchers("/api/place/**").permitAll()
+            .antMatchers("/api/comment/**").permitAll()
             .antMatchers("/api/auth/image").permitAll()
-        .anyRequest().authenticated()
+            .anyRequest().authenticated()
 
-        .and()
-        .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
+            .and()
+            .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
 
     return http.build();
   }

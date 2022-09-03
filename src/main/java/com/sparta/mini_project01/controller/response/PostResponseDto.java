@@ -15,12 +15,11 @@ import java.util.List;
 public class PostResponseDto {
   private Long id;
   private String title;
+  private String placetitle;
   private String content;
   private String author;
-  private int likes;
   private List<CommentResponseDto> commentResponseDtoList;
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
-
   private String imageUrl;
 }

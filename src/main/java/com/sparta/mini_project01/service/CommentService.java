@@ -3,12 +3,9 @@ package com.sparta.mini_project01.service;
 import com.sparta.mini_project01.controller.request.CommentRequestDto;
 import com.sparta.mini_project01.controller.response.CommentResponseDto;
 import com.sparta.mini_project01.controller.response.ResponseDto;
-import com.sparta.mini_project01.controller.response.SubCommentResponseDto;
 import com.sparta.mini_project01.domain.*;
 import com.sparta.mini_project01.jwt.TokenProvider;
-import com.sparta.mini_project01.repository.CommentHeartRepository;
 import com.sparta.mini_project01.repository.CommentRepository;
-import com.sparta.mini_project01.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +22,6 @@ public class CommentService {
   private final CommentRepository commentRepository;
   private final TokenProvider tokenProvider;
   private final PostService postService;
-  private final CommentHeartRepository heartRepository;
-  private final SubCommentRepository subCommentRepository;
 
   @Transactional
   public ResponseDto<?> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
@@ -62,7 +57,6 @@ public class CommentService {
             .id(comment.getId())
             .author(comment.getMember().getNickname())
             .content(comment.getContent())
-            .likes(comment.getLikes())
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
             .build()
@@ -80,31 +74,13 @@ public class CommentService {
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     for (Comment comment : commentList) {
-
-      List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
-      List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
-      for (SubComment subComment : subCommentList) {
-        subCommentResponseDtoList.add(
-                SubCommentResponseDto.builder()
-                        .id(subComment.getId())
-                        .author(subComment.getMember().getNickname())
-                        .content(subComment.getContent())
-                        .likes(subComment.getLikes())
-                        .createdAt(subComment.getCreatedAt())
-                        .modifiedAt(subComment.getModifiedAt())
-                        .build()
-        );
-      }
-
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
                       .author(comment.getMember().getNickname())
                       .content(comment.getContent())
-                      .likes(comment.getLikes())
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
-                      .SubCommentResponseDtoList(subCommentResponseDtoList)
                       .build()
       );
     }
@@ -148,7 +124,6 @@ public class CommentService {
             .id(comment.getId())
             .author(comment.getMember().getNickname())
             .content(comment.getContent())
-            .likes(comment.getLikes())
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
             .build()
@@ -197,45 +172,6 @@ public class CommentService {
       return null;
     }
     return tokenProvider.getMemberFromAuthentication();
-  }
-
-  public CommentHeart isPresentHeart(Long commentId, String nickname) {
-    Optional<CommentHeart> optionalHeart = heartRepository.findByRequestIdAndNickname(commentId,nickname);
-    return optionalHeart.orElse(null);
-  }
-
-  @Transactional
-  public ResponseDto<?> likeComment(Long id, HttpServletRequest request) {
-
-    if (null == request.getHeader("Refresh-Token")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
-
-    if (null == request.getHeader("Authorization")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
-
-    Member member = validateMember(request);
-    if (null == member) {
-      return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-    }
-
-    Comment comment = isPresentComment(id);
-    if (null == comment) {
-      return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-    }
-
-    CommentHeart commentHeart = isPresentHeart(comment.getId(), member.getNickname());
-    if(null == commentHeart)
-      heartRepository.save(CommentHeart.builder().requestId(comment.getId()).nickname(member.getNickname()).build());
-    else
-      heartRepository.delete(commentHeart);
-
-    comment.updateLikes(heartRepository.findAllByRequestId(comment.getId()).size());
-
-    return ResponseDto.success("like success");
   }
 
 }
