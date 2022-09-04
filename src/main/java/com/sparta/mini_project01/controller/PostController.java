@@ -1,12 +1,16 @@
 package com.sparta.mini_project01.controller;
 
 import com.sparta.mini_project01.controller.request.PostRequestDto;
+import com.sparta.mini_project01.controller.response.ImageResponseDto;
 import com.sparta.mini_project01.controller.response.ResponseDto;
 import com.sparta.mini_project01.service.PostService;
+import com.sparta.mini_project01.service.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -14,35 +18,38 @@ public class PostController {
 
   private final PostService postService;
 
-  @RequestMapping(value = "/api/auth/post", method = RequestMethod.POST)
-  public ResponseDto<?> createPost(@RequestBody PostRequestDto requestDto,
-      HttpServletRequest request) {
-    return postService.createPost(requestDto, request);
+  private final S3UploaderService s3Uploader;
+
+  @RequestMapping(value = "/api/auth/place", method = RequestMethod.POST)
+  public ResponseDto<?> createPost(@RequestPart(value = "key") PostRequestDto requestDto,
+      HttpServletRequest request, @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
+    ImageResponseDto imageResponseDto = new ImageResponseDto(s3Uploader.uploadFiles(multipartFile,"static/"));
+    return postService.createPost(requestDto, request, imageResponseDto);
   }
 
-  @RequestMapping(value = "/api/post/{id}", method = RequestMethod.GET)
+  @RequestMapping(value = "/api/place/{id}", method = RequestMethod.GET)
   public ResponseDto<?> getPost(@PathVariable Long id) {
     return postService.getPost(id);
   }
 
-  @RequestMapping(value = "/api/post", method = RequestMethod.GET)
+  @RequestMapping(value = "/api/place", method = RequestMethod.GET)
   public ResponseDto<?> getAllPosts() {
     return postService.getAllPost();
   }
 
-  @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.PUT)
   public ResponseDto<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
       HttpServletRequest request) {
     return postService.updatePost(id, postRequestDto, request);
   }
 
-  @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.DELETE)
+  @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.DELETE)
   public ResponseDto<?> deletePost(@PathVariable Long id,
       HttpServletRequest request) {
     return postService.deletePost(id, request);
   }
 
-  @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.POST)
   public ResponseDto<?> likePost(@PathVariable Long id, HttpServletRequest request) {
     return postService.likePost(id, request);
   }

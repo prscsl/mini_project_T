@@ -21,7 +21,7 @@ public class S3Controller {
 
     //List<MultipartFile> files
 
-    @PostMapping("/api/auth/image")
+    @PostMapping("/api/auth/place/image")
     public ResponseDto<?> imageUpload(@RequestParam("image") MultipartFile multipartFile){
 
         if(multipartFile.isEmpty()){
@@ -37,13 +37,13 @@ public class S3Controller {
     }
 
 
-    @GetMapping("/api/auth/test")
-    public void test(){
-        try{
-            imageScheduler.deleteImage();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
+//    @GetMapping("/api/auth/test")
+//    public void test(){
+//        try{
+//            imageScheduler.deleteImage();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//    }
 }

@@ -1,10 +1,7 @@
 package com.sparta.mini_project01.service;
 
 import com.sparta.mini_project01.controller.request.PostRequestDto;
-import com.sparta.mini_project01.controller.response.CommentResponseDto;
-import com.sparta.mini_project01.controller.response.PostResponseDto;
-import com.sparta.mini_project01.controller.response.ResponseDto;
-import com.sparta.mini_project01.controller.response.SubCommentResponseDto;
+import com.sparta.mini_project01.controller.response.*;
 import com.sparta.mini_project01.domain.*;
 import com.sparta.mini_project01.jwt.TokenProvider;
 import com.sparta.mini_project01.repository.CommentRepository;
@@ -14,8 +11,11 @@ import com.sparta.mini_project01.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
 
+  private final S3UploaderService s3Uploader;
   private final PostRepository postRepository;
   private final PostHeartRepository heartRepository;
   private final CommentRepository commentRepository;
@@ -31,7 +32,20 @@ public class PostService {
   private final TokenProvider tokenProvider;
 
   @Transactional
-  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
+  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request, ImageResponseDto imageResponseDto) throws IOException {
+
+//    ImageResponseDto imageResponseDto = new ImageResponseDto(s3Uploader.uploadFiles(multipartFile,"static/"));
+
+//    if(multipartFile.isEmpty()){
+//      return ResponseDto.fail("INVALID_FILE","파일이 유효하지 않습니다.");
+//    }
+//    try{
+//     new ImageResponseDto(s3Uploader.uploadFiles(multipartFile,"static/"));
+//    }catch (Exception e){
+//      e.printStackTrace();
+//      return ResponseDto.fail("INVALID_FILE","파일이 유효하지 않습니다.");
+//    }
+
     if (null == request.getHeader("Refresh-Token")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "로그인이 필요합니다.");
@@ -49,19 +63,23 @@ public class PostService {
 
     Post post = Post.builder()
         .title(requestDto.getTitle())
+        .placetitle(requestDto.getPlacetitle())
         .content(requestDto.getContent())
+        .imgUrl(imageResponseDto.getImageUrl())
         .member(member)
         .build();
     postRepository.save(post);
     return ResponseDto.success(
         PostResponseDto.builder()
             .id(post.getId())
+            .imageUrl(post.getImgUrl())
+            .placeTitle(post.getPlacetitle())
             .title(post.getTitle())
             .content(post.getContent())
             .author(post.getMember().getNickname())
-            .likes(post.getLikes())
+//            .likes(post.getLikes())
             .createdAt(post.getCreatedAt())
-            .modifiedAt(post.getModifiedAt())
+//            .modifiedAt(post.getModifiedAt())
             .build()
     );
   }
@@ -111,11 +129,13 @@ public class PostService {
     return ResponseDto.success(
         PostResponseDto.builder()
             .id(post.getId())
+            .imageUrl(post.getImgUrl())
             .title(post.getTitle())
-            .content(post.getContent())
-            .likes(post.getLikes())
-            .commentResponseDtoList(commentResponseDtoList)
+            .placeTitle(post.getPlacetitle())
             .author(post.getMember().getNickname())
+            .content(post.getContent())
+//            .likes(post.getLikes())
+            .commentResponseDtoList(commentResponseDtoList)
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
             .build()
@@ -124,8 +144,31 @@ public class PostService {
 
   @Transactional(readOnly = true)
   public ResponseDto<?> getAllPost() {
-    return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
+    List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
+    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+    for(Post post : postList){
+      postResponseDtoList.add(
+              PostResponseDto.builder()
+                      .id(post.getId())
+                      .imageUrl(post.getImgUrl())
+                      .title(post.getTitle())
+                      .placeTitle(post.getPlacetitle())
+                      .author(post.getMember().getNickname())
+                      .content(post.getContent())
+//                      .likes(post.getLikes())
+                      .createdAt(post.getCreatedAt())
+//                      .modifiedAt(post.getModifiedAt())
+                      .build()
+      );
+    }
+    return ResponseDto.success(postResponseDtoList);
+
+//    return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
   }
+
+
+
 
   @Transactional
   public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
