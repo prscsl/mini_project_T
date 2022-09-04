@@ -1,8 +1,11 @@
 package com.sparta.mini_project01.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.sparta.mini_project01.domain.Image;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,25 +27,32 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3UploaderService {
 
+    private final AmazonS3 amazonS3;
+
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFiles(MultipartFile multipartFile , String dirName)throws IOException{
+
+    public Image uploadFiles(MultipartFile multipartFile , String filepath)throws IOException{
         File uploadFile =convert(multipartFile)
                 .orElseThrow(()->new IllegalArgumentException("ERROR :  MultipartFile -> File convert fail"));
 
-        return upload(uploadFile,dirName);
+        return upload(uploadFile,filepath);
     }
 
     //(S3 서버에 올리면서 로컬에 만든 파일 지우기) 총괄 함수
-    public String upload(File uploadFile, String filepath){
+    public Image upload(File uploadFile, String filepath){
         String fileName = filepath+"/"+UUID.randomUUID() + uploadFile.getName();
 
         String uploadImageUrl = putS3(uploadFile,fileName);
+
         removeNewFile(uploadFile);
-        return uploadImageUrl;
+        return Image.builder()
+                .key(fileName)
+                .path(uploadImageUrl)
+                .build();
     }
 
     //S3 업로드
@@ -74,6 +84,13 @@ public class S3UploaderService {
         }
         System.out.println("변환실패");
         return Optional.empty();
+    }
+
+    public void remove(String key) {
+//        if (!amazonS3Client.doesObjectExist(bucket, key)) {
+//            throw new AmazonS3Exception("Object " +key+ " does not exist!");
+//        }
+        amazonS3.deleteObject(bucket, key);
     }
 
 }

@@ -1,12 +1,14 @@
 package com.sparta.mini_project01.domain;
 
 import com.sparta.mini_project01.controller.request.PostRequestDto;
+import com.sparta.mini_project01.controller.response.ImageResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,9 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String imgUrl;
 
+  @Column(nullable = false)
+  private String imageKey;
+
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
@@ -45,9 +50,11 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private int likes;
 
-  public void update(PostRequestDto postRequestDto) {
+  public void update(PostRequestDto postRequestDto, Image image) {
     this.title = postRequestDto.getTitle();
     this.content = postRequestDto.getContent();
+    this.imgUrl = image.getPath();
+    this.imageKey = image.getKey();
   }
 
   public boolean validateMember(Member member) {

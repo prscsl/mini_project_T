@@ -3,6 +3,7 @@ package com.sparta.mini_project01.controller;
 import com.sparta.mini_project01.controller.request.PostRequestDto;
 import com.sparta.mini_project01.controller.response.ImageResponseDto;
 import com.sparta.mini_project01.controller.response.ResponseDto;
+import com.sparta.mini_project01.domain.Image;
 import com.sparta.mini_project01.service.PostService;
 import com.sparta.mini_project01.service.S3UploaderService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,7 @@ public class PostController {
   @RequestMapping(value = "/api/auth/place", method = RequestMethod.POST)
   public ResponseDto<?> createPost(@RequestPart(value = "key") PostRequestDto requestDto,
       HttpServletRequest request, @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
-    ImageResponseDto imageResponseDto = new ImageResponseDto(s3Uploader.uploadFiles(multipartFile,"static/"));
-    return postService.createPost(requestDto, request, imageResponseDto);
+    return postService.createPost(requestDto, request, multipartFile);
   }
 
   @RequestMapping(value = "/api/place/{id}", method = RequestMethod.GET)
@@ -38,9 +38,9 @@ public class PostController {
   }
 
   @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.PUT)
-  public ResponseDto<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
-      HttpServletRequest request) {
-    return postService.updatePost(id, postRequestDto, request);
+  public ResponseDto<?> updatePost(@PathVariable Long id, @RequestPart(value = "key") PostRequestDto postRequestDto,
+                                   @RequestPart(value = "file") MultipartFile multipartFile, HttpServletRequest request) throws IOException {
+    return postService.updatePost(id, postRequestDto, request, multipartFile);
   }
 
   @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.DELETE)

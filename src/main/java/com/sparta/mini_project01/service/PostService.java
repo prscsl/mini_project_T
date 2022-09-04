@@ -32,19 +32,7 @@ public class PostService {
   private final TokenProvider tokenProvider;
 
   @Transactional
-  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request, ImageResponseDto imageResponseDto) throws IOException {
-
-//    ImageResponseDto imageResponseDto = new ImageResponseDto(s3Uploader.uploadFiles(multipartFile,"static/"));
-
-//    if(multipartFile.isEmpty()){
-//      return ResponseDto.fail("INVALID_FILE","파일이 유효하지 않습니다.");
-//    }
-//    try{
-//     new ImageResponseDto(s3Uploader.uploadFiles(multipartFile,"static/"));
-//    }catch (Exception e){
-//      e.printStackTrace();
-//      return ResponseDto.fail("INVALID_FILE","파일이 유효하지 않습니다.");
-//    }
+  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request, MultipartFile multipartFile) throws IOException {
 
     if (null == request.getHeader("Refresh-Token")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -61,11 +49,14 @@ public class PostService {
       return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
     }
 
+    Image image = s3Uploader.uploadFiles(multipartFile,"static/");
+
     Post post = Post.builder()
         .title(requestDto.getTitle())
         .placetitle(requestDto.getPlacetitle())
         .content(requestDto.getContent())
-        .imgUrl(imageResponseDto.getImageUrl())
+        .imgUrl(image.getPath())
+        .imageKey(image.getKey())
         .member(member)
         .build();
     postRepository.save(post);
@@ -171,7 +162,8 @@ public class PostService {
 
 
   @Transactional
-  public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
+  public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request,
+                                      MultipartFile multipartFile) throws IOException {
     if (null == request.getHeader("Refresh-Token")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "로그인이 필요합니다.");
@@ -196,7 +188,11 @@ public class PostService {
       return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
     }
 
-    post.update(requestDto);
+    Image image = s3Uploader.uploadFiles(multipartFile,"static/");
+
+    s3Uploader.remove(post.getImageKey());
+
+    post.update(requestDto, image);
     return ResponseDto.success(post);
   }
 
@@ -225,6 +221,8 @@ public class PostService {
     if (post.validateMember(member)) {
       return ResponseDto.fail("BAD_REQUEST", "작성자만 삭제할 수 있습니다.");
     }
+
+    s3Uploader.remove(post.getImageKey());
 
     postRepository.delete(post);
     return ResponseDto.success("delete success");
