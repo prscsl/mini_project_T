@@ -26,7 +26,6 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String title;
 
-
   @Column(nullable = false)
   private String placetitle;
 
@@ -39,7 +38,7 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String imageKey;
 
-
+  
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
 
