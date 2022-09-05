@@ -104,13 +104,37 @@ public class PostService {
     );
   }
 
+@Transactional(readOnly = true)
+  public ResponseDto<?> getAllPost() {
+    List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
+    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
 
-    @Transactional
-    public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
+    for(Post post : postList){
+      postResponseDtoList.add(
+              PostResponseDto.builder()
+                      .id(post.getId())
+                      .imageUrl(post.getImgUrl())
+                      .title(post.getTitle())
+                      .placeTitle(post.getPlacetitle())
+                      .author(post.getMember().getNickname())
+                      .content(post.getContent())
+                      .createdAt(post.getCreatedAt())
+//                      .modifiedAt(post.getModifiedAt())
+                      .build()
+      );
+    }
+    return ResponseDto.success(postResponseDtoList);
+
+//    return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
+  }
+
+  @Transactional
+  public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request,
+                                      MultipartFile multipartFile) throws IOException {
+    if (null == request.getHeader("Refresh-Token")) {
+      return ResponseDto.fail("MEMBER_NOT_FOUND",
+          "로그인이 필요합니다.");
+    }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
