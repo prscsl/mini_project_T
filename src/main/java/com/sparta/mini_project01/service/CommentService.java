@@ -24,7 +24,7 @@ public class CommentService {
   private final PostService postService;
 
   @Transactional
-  public ResponseDto<?> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
+  public ResponseDto<?> createComment(Long postId, CommentRequestDto requestDto, HttpServletRequest request) {
     if (null == request.getHeader("Refresh-Token")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "로그인이 필요합니다.");
@@ -40,7 +40,7 @@ public class CommentService {
       return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
     }
 
-    Post post = postService.isPresentPost(requestDto.getRequestId());
+    Post post = postService.isPresentPost(postId);
     if (null == post) {
       return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
     }
@@ -74,7 +74,6 @@ public class CommentService {
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     for (Comment comment : commentList) {
-
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
@@ -104,11 +103,7 @@ public class CommentService {
     if (null == member) {
       return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
     }
-
-    Post post = postService.isPresentPost(requestDto.getRequestId());
-    if (null == post) {
-      return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-    }
+    
 
     Comment comment = isPresentComment(id);
     if (null == comment) {
