@@ -55,12 +55,11 @@ public class SecurityConfiguration {
 
         .and()
         .authorizeRequests()
-        .antMatchers("/api/member/**").permitAll()
-        .antMatchers("/api/place/**").permitAll()
-        .antMatchers("/api/comment/**").permitAll()
-            .antMatchers("/api/subComment/**").permitAll()
-            .antMatchers("/api/auth/image").permitAll()
-        .anyRequest().authenticated()
+            .antMatchers("/api/signup").permitAll()
+            .antMatchers("/api/login").permitAll()
+            .antMatchers("/api/place/**").permitAll()
+            .antMatchers("/api/comment/**").permitAll()
+            .anyRequest().authenticated()
 
         .and()
         .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));

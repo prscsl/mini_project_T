@@ -86,31 +86,13 @@ public class PostService {
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     for (Comment comment : commentList) {
-
-      List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
-      List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
-      for (SubComment subComment : subCommentList) {
-        subCommentResponseDtoList.add(
-                SubCommentResponseDto.builder()
-                        .id(subComment.getId())
-                        .author(subComment.getMember().getNickname())
-                        .content(subComment.getContent())
-                        .likes(subComment.getLikes())
-                        .createdAt(subComment.getCreatedAt())
-                        .modifiedAt(subComment.getModifiedAt())
-                        .build()
-        );
-      }
-
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
                       .author(comment.getMember().getNickname())
                       .content(comment.getContent())
-                      .likes(comment.getLikes())
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
-                      .SubCommentResponseDtoList(subCommentResponseDtoList)
                       .build()
       );
 
@@ -125,7 +107,6 @@ public class PostService {
             .placeTitle(post.getPlacetitle())
             .author(post.getMember().getNickname())
             .content(post.getContent())
-//            .likes(post.getLikes())
             .commentResponseDtoList(commentResponseDtoList)
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
@@ -147,7 +128,6 @@ public class PostService {
                       .placeTitle(post.getPlacetitle())
                       .author(post.getMember().getNickname())
                       .content(post.getContent())
-//                      .likes(post.getLikes())
                       .createdAt(post.getCreatedAt())
 //                      .modifiedAt(post.getModifiedAt())
                       .build()
@@ -240,46 +220,6 @@ public class PostService {
       return null;
     }
     return tokenProvider.getMemberFromAuthentication();
-  }
-
-  public  PostHeart isPresentHeart(Long postId, String nickname) {
-      Optional< PostHeart> optionalHeart = heartRepository.findByRequestIdAndNickname(postId,nickname);
-      return optionalHeart.orElse(null);
-  }
-
-  @Transactional
-  public ResponseDto<?> likePost(Long id, HttpServletRequest request) {
-
-    if (null == request.getHeader("Refresh-Token")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
-
-    if (null == request.getHeader("Authorization")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
-
-    Member member = validateMember(request);
-    if (null == member) {
-      return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-    }
-
-    Post post = isPresentPost(id);
-    if (null == post) {
-      return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-    }
-
-    PostHeart heart = isPresentHeart(post.getId(), member.getNickname());
-
-    if(null == heart)
-      heartRepository.save(PostHeart.builder().requestId(post.getId()).nickname(member.getNickname()).build());
-    else
-      heartRepository.delete(heart);
-
-    post.updateLikes(heartRepository.findAllByRequestId(post.getId()).size());
-
-    return ResponseDto.success("like success");
   }
 
 }

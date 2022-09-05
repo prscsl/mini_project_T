@@ -48,9 +48,4 @@ public class PostController {
       HttpServletRequest request) {
     return postService.deletePost(id, request);
   }
-
-  @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.POST)
-  public ResponseDto<?> likePost(@PathVariable Long id, HttpServletRequest request) {
-    return postService.likePost(id, request);
-  }
 }
