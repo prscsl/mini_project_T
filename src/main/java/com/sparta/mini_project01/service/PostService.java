@@ -86,20 +86,6 @@ public class PostService {
 
     for (Comment comment : commentList) {
 
-      List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
-      List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
-      for (SubComment subComment : subCommentList) {
-        subCommentResponseDtoList.add(
-                SubCommentResponseDto.builder()
-                        .id(subComment.getId())
-                        .author(subComment.getMember().getNickname())
-                        .content(subComment.getContent())
-                        .createdAt(subComment.getCreatedAt())
-                        .modifiedAt(subComment.getModifiedAt())
-                        .build()
-        );
-      }
-
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
@@ -107,7 +93,6 @@ public class PostService {
                       .content(comment.getContent())
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
-                      .SubCommentResponseDtoList(subCommentResponseDtoList)
                       .build()
       );
 
