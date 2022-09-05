@@ -174,6 +174,4 @@ public class PostService {
     }
     return tokenProvider.getMemberFromAuthentication();
   }
-
-
 }
