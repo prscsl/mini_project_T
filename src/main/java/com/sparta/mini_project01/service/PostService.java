@@ -158,9 +158,6 @@ public class PostService {
 //    return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
   }
 
-
-
-
   @Transactional
   public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request,
                                       MultipartFile multipartFile) throws IOException {
@@ -246,6 +243,4 @@ public class PostService {
       Optional< PostHeart> optionalHeart = heartRepository.findByRequestIdAndNickname(postId,nickname);
       return optionalHeart.orElse(null);
   }
-
-
 }
