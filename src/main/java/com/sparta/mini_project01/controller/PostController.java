@@ -14,10 +14,12 @@ public class PostController {
 
   private final PostService postService;
 
+  private final S3UploaderService s3Uploader;
+
   @RequestMapping(value = "/api/auth/place", method = RequestMethod.POST)
-  public ResponseDto<?> createPost(@RequestBody PostRequestDto requestDto,
-      HttpServletRequest request) {
-    return postService.createPost(requestDto, request);
+  public ResponseDto<?> createPost(@RequestPart(value = "key") PostRequestDto requestDto,
+      HttpServletRequest request, @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
+    return postService.createPost(requestDto, request, multipartFile);
   }
 
   @RequestMapping(value = "/api/place/{id}", method = RequestMethod.GET)
@@ -31,9 +33,9 @@ public class PostController {
   }
 
   @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.PUT)
-  public ResponseDto<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
-      HttpServletRequest request) {
-    return postService.updatePost(id, postRequestDto, request);
+  public ResponseDto<?> updatePost(@PathVariable Long id, @RequestPart(value = "key") PostRequestDto postRequestDto,
+                                   @RequestPart(value = "file") MultipartFile multipartFile, HttpServletRequest request) throws IOException {
+    return postService.updatePost(id, postRequestDto, request, multipartFile);
   }
 
   @RequestMapping(value = "/api/auth/place/{id}", method = RequestMethod.DELETE)
