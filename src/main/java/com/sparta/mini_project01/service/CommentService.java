@@ -74,6 +74,7 @@ public class CommentService {
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     for (Comment comment : commentList) {
+
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
