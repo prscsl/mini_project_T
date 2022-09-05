@@ -247,39 +247,5 @@ public class PostService {
       return optionalHeart.orElse(null);
   }
 
-  @Transactional
-  public ResponseDto<?> likePost(Long id, HttpServletRequest request) {
-
-    if (null == request.getHeader("Refresh-Token")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
-
-    if (null == request.getHeader("Authorization")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
-
-    Member member = validateMember(request);
-    if (null == member) {
-      return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-    }
-
-    Post post = isPresentPost(id);
-    if (null == post) {
-      return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-    }
-
-    PostHeart heart = isPresentHeart(post.getId(), member.getNickname());
-
-    if(null == heart)
-      heartRepository.save(PostHeart.builder().requestId(post.getId()).nickname(member.getNickname()).build());
-    else
-      heartRepository.delete(heart);
-
-    post.updateLikes(heartRepository.findAllByRequestId(post.getId()).size());
-
-    return ResponseDto.success("like success");
-  }
 
 }
