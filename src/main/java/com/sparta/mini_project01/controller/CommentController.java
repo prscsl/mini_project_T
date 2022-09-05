@@ -38,6 +38,4 @@ public class CommentController {
       HttpServletRequest request) {
     return commentService.deleteComment(id, request);
   }
-  
-  
 }
