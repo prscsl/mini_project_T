@@ -15,7 +15,7 @@ import java.util.List;
 public class PostResponseDto {
   private Long id;
   private String title;
-  private String placetitle;
+  private String placeTitle;
   private String content;
   private String author;
   private List<CommentResponseDto> commentResponseDtoList;
