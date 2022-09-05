@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,11 @@ public class SecurityConfiguration {
   private final UserDetailsServiceImpl userDetailsService;
   private final AuthenticationEntryPointException authenticationEntryPointException;
   private final AccessDeniedHandlerException accessDeniedHandlerException;
+
+  @Bean
+  public WebSecurityCustomizer ignoringCustomizer() {
+    return (web) -> web.ignoring().antMatchers("/h2-console/**");
+  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {

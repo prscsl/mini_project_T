@@ -5,9 +5,7 @@ import com.sparta.mini_project01.controller.response.*;
 import com.sparta.mini_project01.domain.*;
 import com.sparta.mini_project01.jwt.TokenProvider;
 import com.sparta.mini_project01.repository.CommentRepository;
-import com.sparta.mini_project01.repository.PostHeartRepository;
 import com.sparta.mini_project01.repository.PostRepository;
-import com.sparta.mini_project01.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +24,7 @@ public class PostService {
 
   private final S3UploaderService s3Uploader;
   private final PostRepository postRepository;
-  private final PostHeartRepository heartRepository;
   private final CommentRepository commentRepository;
-  private final SubCommentRepository subCommentRepository;
   private final TokenProvider tokenProvider;
 
   @Transactional

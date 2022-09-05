@@ -18,6 +18,14 @@ public class UserDetailsImpl implements UserDetails {
 
   private Member member;
 
+  public Member getMember(){
+    return this.member;
+  }
+
+  public void setMember(Member member) {
+    this.member = member;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Authority.ROLE_MEMBER.toString());

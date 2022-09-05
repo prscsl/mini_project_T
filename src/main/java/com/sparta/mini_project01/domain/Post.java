@@ -47,8 +47,6 @@ public class Post extends Timestamped {
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
 
-  @Column(nullable = false)
-  private int likes;
 
   public void update(PostRequestDto postRequestDto, Image image) {
     this.title = postRequestDto.getTitle();
@@ -61,7 +59,4 @@ public class Post extends Timestamped {
     return !this.member.equals(member);
   }
 
-  public void updateLikes(int num){
-    this.likes = num;
-  }
 }

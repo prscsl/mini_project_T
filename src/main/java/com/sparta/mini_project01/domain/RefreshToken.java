@@ -22,10 +22,13 @@ public class RefreshToken extends Timestamped {
   @OneToOne(fetch = FetchType.LAZY)
   private Member member;
 
+//  @Column(nullable = false)
+//  private String value;
+
   @Column(nullable = false)
-  private String value;
+  private String refreshToken;
 
   public void updateValue(String token) {
-    this.value = token;
+    this.refreshToken = token;
   }
 }

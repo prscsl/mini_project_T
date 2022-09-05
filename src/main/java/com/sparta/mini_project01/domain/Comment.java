@@ -28,14 +28,8 @@ public class Comment extends Timestamped {
   @ManyToOne(fetch = FetchType.LAZY)
   private Post post;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<SubComment> subComments;
-
   @Column(nullable = false)
   private String content;
-
-  @Column(nullable = false)
-  private int likes;
 
 
 
@@ -47,7 +41,4 @@ public class Comment extends Timestamped {
     return !this.member.equals(member);
   }
 
-  public void updateLikes(int num){
-    this.likes = num;
-  }
 }
