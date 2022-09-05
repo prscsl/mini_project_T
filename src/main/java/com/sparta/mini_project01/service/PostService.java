@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-    private final S3UploaderService s3Uploader;
+  private final S3UploaderService s3Uploader;
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
   private final TokenProvider tokenProvider;
@@ -88,11 +88,22 @@ public class PostService {
                       .build()
       );
     }
+      
+      return ResponseDto.success(
+        PostResponseDto.builder()
+            .id(post.getId())
+            .imageUrl(post.getImgUrl())
+            .title(post.getTitle())
+            .placeTitle(post.getPlacetitle())
+            .author(post.getMember().getNickname())
+            .content(post.getContent())
+            .commentResponseDtoList(commentResponseDtoList)
+            .createdAt(post.getCreatedAt())
+            .modifiedAt(post.getModifiedAt())
+            .build()
+    );
+  }
 
-    @Transactional(readOnly = true)
-    public ResponseDto<?> getAllPost() {
-        return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
-    }
 
     @Transactional
     public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
