@@ -53,13 +53,13 @@ public class SecurityConfiguration {
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-            .and()
-            .authorizeRequests()
-            .antMatchers("/api/signup").permitAll()
-            .antMatchers("/api/login").permitAll()
-            .antMatchers("/api/place/**").permitAll()
-            .antMatchers("/api/comment/**").permitAll()
-            .anyRequest().authenticated()
+        .and()
+        .authorizeRequests()
+        .antMatchers("/api/signup").permitAll()
+        .antMatchers("/api/login").permitAll()
+        .antMatchers("/api/place/**").permitAll()
+        .antMatchers("/api/comment/**").permitAll()
+        .anyRequest().authenticated()
 
             .and()
             .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
