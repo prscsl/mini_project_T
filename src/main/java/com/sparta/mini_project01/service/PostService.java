@@ -18,6 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+  
   private final S3UploaderService s3Uploader;
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
