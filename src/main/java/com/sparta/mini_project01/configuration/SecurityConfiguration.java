@@ -51,13 +51,13 @@ public class SecurityConfiguration {
 
     http.csrf().disable()
 
-        .exceptionHandling()
-        .authenticationEntryPoint(authenticationEntryPointException)
-        .accessDeniedHandler(accessDeniedHandlerException)
+            .exceptionHandling()
+            .authenticationEntryPoint(authenticationEntryPointException)
+            .accessDeniedHandler(accessDeniedHandlerException)
 
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         .and()
         .authorizeRequests()
@@ -67,8 +67,8 @@ public class SecurityConfiguration {
         .antMatchers("/api/comment/**").permitAll()
         .anyRequest().authenticated()
 
-        .and()
-        .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
+            .and()
+            .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
 
     return http.build();
   }

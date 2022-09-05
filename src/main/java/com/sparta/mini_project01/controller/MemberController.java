@@ -32,12 +32,7 @@ public class MemberController {
     return memberService.login(requestDto, response);
   }
 
-//  @RequestMapping(value = "/api/auth/member/reissue", method = RequestMethod.POST)
-//  public ResponseDto<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-//    return memberService.reissue(request, response);
-//  }
-
-  @RequestMapping(value = "/api/auth/member/logout", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/auth/logout", method = RequestMethod.POST)
   public ResponseDto<?> logout(HttpServletRequest request) {
     return memberService.logout(request);
   }
