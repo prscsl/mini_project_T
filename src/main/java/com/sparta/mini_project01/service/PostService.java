@@ -68,7 +68,6 @@ public class PostService {
             .title(post.getTitle())
             .content(post.getContent())
             .author(post.getMember().getNickname())
-//            .likes(post.getLikes())
             .createdAt(post.getCreatedAt())
 //            .modifiedAt(post.getModifiedAt())
             .build()
@@ -147,7 +146,6 @@ public class PostService {
                       .placeTitle(post.getPlacetitle())
                       .author(post.getMember().getNickname())
                       .content(post.getContent())
-//                      .likes(post.getLikes())
                       .createdAt(post.getCreatedAt())
 //                      .modifiedAt(post.getModifiedAt())
                       .build()
@@ -237,10 +235,5 @@ public class PostService {
       return null;
     }
     return tokenProvider.getMemberFromAuthentication();
-  }
-
-  public  PostHeart isPresentHeart(Long postId, String nickname) {
-      Optional< PostHeart> optionalHeart = heartRepository.findByRequestIdAndNickname(postId,nickname);
-      return optionalHeart.orElse(null);
   }
 }
