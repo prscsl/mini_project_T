@@ -1,9 +1,7 @@
 package com.sparta.mini_project01.service;
 
 import com.sparta.mini_project01.controller.request.PostRequestDto;
-import com.sparta.mini_project01.controller.response.CommentResponseDto;
-import com.sparta.mini_project01.controller.response.PostResponseDto;
-import com.sparta.mini_project01.controller.response.ResponseDto;
+import com.sparta.mini_project01.controller.request.*;
 import com.sparta.mini_project01.domain.*;
 import com.sparta.mini_project01.jwt.TokenProvider;
 import com.sparta.mini_project01.repository.CommentRepository;
