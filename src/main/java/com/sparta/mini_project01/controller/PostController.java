@@ -41,5 +41,4 @@ public class PostController {
       HttpServletRequest request) {
     return postService.deletePost(id, request);
   }
-
 }
