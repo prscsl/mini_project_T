@@ -27,9 +27,6 @@ public class Post extends Timestamped {
   private String title;
 
   @Column(nullable = false)
-  private String placetitle;
-
-  @Column(nullable = false)
   private String content;
 
   @Column(nullable = false)
