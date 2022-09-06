@@ -115,7 +115,7 @@ public class PostService {
     );
   }
 
-  //게시글 전체불러오기
+  //게시글 전체 불러오기
   @Transactional(readOnly = true)
   public ResponseDto<?> getAllPost() {
     //게시글 전체 저장소에서 불러와 List형태로 생성
