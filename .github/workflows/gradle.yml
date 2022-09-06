@@ -12,7 +12,7 @@ on:
     branches: [ "master" ]
     
 env:
-  S3_BUCKET_NAME: prscs-test3
+  S3_BUCKET_NAME: prscsl-test3
 
 
 jobs:
@@ -77,7 +77,7 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
       run:
         aws deploy create-deployment 
-        --application-name prscs-test3
+        --application-name prscs-test2
         --deployment-group-name prscs-group2
         --file-exists-behavior OVERWRITE 
-        --s3-location bucket=prscs-test3,bundleType=zip,key=prscs.zip
+        --s3-location bucket=prscsl-test3,bundleType=zip,key=prscs.zip
