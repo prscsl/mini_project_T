@@ -12,7 +12,7 @@ on:
     branches: [ "master" ]
     
 env:
-  S3_BUCKET_NAME: prscs-test2
+  S3_BUCKET_NAME: prscs-test3
 
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
     - uses: actions/checkout@v3
     - run: touch ./src/main/resources/application.properties
     - run: echo "${{env.APPLICATION}}" > ./src/main/resources/application.properties
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: application.properties
         path: ./src/main/resources/application.properties
@@ -40,7 +40,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    
     - name: Build with Gradle
       run: ./gradlew clean build
       
@@ -78,7 +77,7 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
       run:
         aws deploy create-deployment 
-        --application-name prscs-test2
+        --application-name prscs-test3
         --deployment-group-name prscs-group2
         --file-exists-behavior OVERWRITE 
-        --s3-location bucket=prscs-test2,bundleType=zip,key=prscs.zip
+        --s3-location bucket=prscs-test3,bundleType=zip,key=prscs.zip
