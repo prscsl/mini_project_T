@@ -16,7 +16,6 @@ on:
 env:
   S3_BUCKET_NAME: ${{secrets.S3_BUCKET_NAME}}
 
-
 jobs:
   build:
 
