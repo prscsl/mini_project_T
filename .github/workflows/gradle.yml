@@ -12,7 +12,7 @@ on:
     branches: [ "master" ]
     
 env:
-  S3_BUCKET_NAME: prscsl-test3
+  S3_BUCKET_NAME: ${{secrets.S3_BUCKET_NAME}}
 
 
 jobs:
@@ -80,4 +80,4 @@ jobs:
         --application-name prscs-test2
         --deployment-group-name prscs-group2
         --file-exists-behavior OVERWRITE 
-        --s3-location bucket=prscsl-test3,bundleType=zip,key=prscs.zip
+        --s3-location bucket=${{secrets.S3_BUCKET_NAME}},bundleType=zip,key=prscs.zip
