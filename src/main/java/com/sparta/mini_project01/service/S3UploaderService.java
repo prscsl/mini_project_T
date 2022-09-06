@@ -57,8 +57,8 @@ public class S3UploaderService {
 
     //S3 업로드
     public String putS3(File uploadFile, String fileName){
-        amazonS3Client.putObject(new PutObjectRequest(bucket,fileName,uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket,fileName).toString();
+        amazonS3.putObject(new PutObjectRequest(bucket,fileName,uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3.getUrl(bucket,fileName).toString();
     }
 
     //로컬에 삭제
@@ -86,10 +86,8 @@ public class S3UploaderService {
         return Optional.empty();
     }
 
+    // image 삭제
     public void remove(String key) {
-//        if (!amazonS3Client.doesObjectExist(bucket, key)) {
-//            throw new AmazonS3Exception("Object " +key+ " does not exist!");
-//        }
         amazonS3.deleteObject(bucket, key);
     }
 
