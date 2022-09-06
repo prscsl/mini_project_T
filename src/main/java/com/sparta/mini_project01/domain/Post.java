@@ -32,7 +32,6 @@ public class Post extends Timestamped {
   private String placetitle;
 
   //리뷰 내용
->>>>>>> test
   @Column(nullable = false)
   private String content;
 
@@ -45,7 +44,6 @@ public class Post extends Timestamped {
   private String imageKey;
 
   //post 해당 댓글 List
->>>>>>> test
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
 
