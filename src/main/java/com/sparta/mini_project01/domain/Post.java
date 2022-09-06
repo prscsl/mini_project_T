@@ -27,15 +27,6 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String title;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-  @Column(nullable = false)
-  private String placetitle;
-
->>>>>>> 0d3325955d3ec2026bf9816c4bae1809a7967658
-=======
   //게시글 리뷰할 대상 맛집 이름
   @Column(nullable = false)
   private String placetitle;
@@ -53,10 +44,6 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String imageKey;
 
-<<<<<<< HEAD
-  
-=======
-
   //post 해당 댓글 List
 >>>>>>> test
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -66,7 +53,6 @@ public class Post extends Timestamped {
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
-
 
   //수정시 활용할 메서드
   public void update(PostRequestDto postRequestDto, Image image) {
