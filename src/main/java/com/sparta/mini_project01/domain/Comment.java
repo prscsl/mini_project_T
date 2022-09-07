@@ -1,5 +1,6 @@
 package com.sparta.mini_project01.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.mini_project01.controller.request.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class Comment extends Timestamped {
 
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   private Member member;
 
   @JoinColumn(name = "post_id", nullable = false)

@@ -29,7 +29,7 @@ public class PostService {
   @Transactional
   public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request, MultipartFile multipartFile) throws IOException {
     //토큰 있는지 확인
-    if (null == request.getHeader("Refresh-Token")) {
+    if (null == request.getHeader("RefreshToken")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "로그인이 필요합니다.");
     }
@@ -146,7 +146,7 @@ public class PostService {
   public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request,
                                       MultipartFile multipartFile) throws IOException {
     //토큰 있는지 확인
-    if (null == request.getHeader("Refresh-Token")) {
+    if (null == request.getHeader("RefreshToken")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "로그인이 필요합니다.");
     }
@@ -186,7 +186,7 @@ public class PostService {
   @Transactional
   public ResponseDto<?> deletePost(Long id, HttpServletRequest request) {
     //토큰 있는지 확인
-    if (null == request.getHeader("Refresh-Token")) {
+    if (null == request.getHeader("RefreshToken")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "로그인이 필요합니다.");
     }
@@ -230,7 +230,7 @@ public class PostService {
   //헤더에 있는 토큰으로 해당 member 불러오기
   @Transactional
   public Member validateMember(HttpServletRequest request) {
-    if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+    if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
       return null;
     }
     return tokenProvider.getMemberFromAuthentication();

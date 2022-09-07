@@ -49,7 +49,7 @@ public class Post extends Timestamped {
 
   //post작성한 회원 정보
   @JoinColumn(name = "member_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   private Member member;
 
   //수정시 활용할 메서드
