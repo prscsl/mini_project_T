@@ -26,13 +26,15 @@
 
 #### 🌀 트러블슈팅
  **클라이언트에서 서버로 요청했을 때 CORS 에러 발생**
- * Spring Security에 CORS 허용 설정을 통해 문제 해결 
+ **Spring Security에 CORS 허용 설정을 통해 문제 해결**
+ * CORS 활성화
          
 >  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 >  
 >      http.cors(); //cors 활성화
 >  }
 
+* CORS 허용 설정
 >addAllowedOrigin("http://localhost:3000");
 >>도메인 허용
 
